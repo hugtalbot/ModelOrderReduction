@@ -544,13 +544,6 @@ void HyperReducedRestShapeSpringsForceField<DataTypes>::addSubKToMatrix(const Me
     }
 }
 
-template<class DataTypes>
-void HyperReducedRestShapeSpringsForceField<DataTypes>::updateForceMask()
-{
-    for (unsigned int i=0; i<m_indices.size(); i++)
-        this->mstate->forceMask.insertEntry(m_indices[i]);
-}
-
 
 } // namespace forcefield
 

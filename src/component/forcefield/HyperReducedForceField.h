@@ -88,7 +88,35 @@ public:
     {
     }
 
+    //double assemblyReduced(int RID,int );
 
+    void updateGie(unsigned int numElem, unsigned int index, double contribX, double contribY, double contribZ)
+    {
+        if (d_prepareECSW.getValue())
+        {
+            std::vector<double> GieUnit;
+            GieUnit.resize(d_nbModes.getValue());
+
+            int numTest = this->getContext()->getTime()/this->getContext()->getDt();
+            if (numTest%d_periodSaveGIE.getValue() == 0)       // Take a measure every periodSaveGIE timesteps
+            {
+                numTest = numTest/d_periodSaveGIE.getValue();
+                for (unsigned int modNum = 0 ; modNum < d_nbModes.getValue() ; modNum++)
+                {
+
+                    GieUnit[modNum] = 0;
+                    GieUnit[modNum] += contribX*m_modes(3*index,modNum)+ contribY*m_modes(3*index+1,modNum)+contribZ*m_modes(3*index+2,modNum);
+                }
+                for (unsigned int i = 0 ; i < d_nbModes.getValue() ; i++)
+                {
+                    if ( d_nbModes.getValue()*numTest < d_nbModes.getValue()*d_nbTrainingSet.getValue() )
+                    {
+                        Gie[d_nbModes.getValue()*numTest+i][numElem] = GieUnit[i];
+                    }
+                }
+            }
+        }
+    }
     void initMOR(unsigned int nbElements){
         if (d_prepareECSW.getValue()){
             MatrixLoader<Eigen::MatrixXd>* matLoader = new MatrixLoader<Eigen::MatrixXd>();
